@@ -1,17 +1,24 @@
 {
-  "name": "js",
+  "name": "note-taker",
   "version": "1.0.0",
-  "description": "",
+  "description": "## Description",
   "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christopher-Lamb/Note-Taker.git"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "jquery": "^3.5.1"
-  }
+  "bugs": {
+    "url": "https://github.com/Christopher-Lamb/Note-Taker/issues"
+  },
+  "homepage": "https://github.com/Christopher-Lamb/Note-Taker#readme"
 }
