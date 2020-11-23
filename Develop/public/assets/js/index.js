@@ -4,20 +4,6 @@ const $saveNoteBtn = $(".save-note");
 const $newNoteBtn = $(".new-note");
 const $noteList = $(".list-container .list-group");
 
-// Dependencies
-// =============================================================
-var express = require("express");
-var path = require("path");
-
-// Sets up the Express App
-// =============================================================
-var app = express();
-var PORT = 3000;
-
-// Sets up the Express app to handle data parsing
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
@@ -46,6 +32,11 @@ const deleteNote = (id) => {
   });
 };
 
+//Refresh Page
+function Refresh() {
+  window.parent.location = window.parent.location.href;
+}
+
 // If there is an activeNote, display it, otherwise render empty inputs
 const renderActiveNote = () => {
   $saveNoteBtn.hide();
@@ -68,8 +59,9 @@ const handleNoteSave = function () {
   const newNote = {
     title: $noteTitle.val(),
     text: $noteText.val(),
+    id: 0,
   };
-
+  Refresh();
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -80,6 +72,7 @@ const handleNoteSave = function () {
 const handleNoteDelete = function (event) {
   // prevents the click listener for the list from being called when the button inside of it is clicked
   event.stopPropagation();
+  Refresh();
 
   const note = $(this).parent(".list-group-item").data();
 
@@ -163,9 +156,3 @@ $noteText.on("keyup", handleRenderSaveBtn);
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();
-
-// Starts the server to begin listening
-// =============================================================
-app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
-});
