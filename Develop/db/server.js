@@ -3,7 +3,6 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const { notStrictEqual } = require("assert");
 
 // Sets up the Express App
 // =============================================================
@@ -19,20 +18,13 @@ let notes = [];
 
 //If Json file is empty dont commit to resting information
 //Gets from 'db.json' and adds to the working Notes array
-fs.readFile(
-  "db.json",
-  "utf8",
-  function (err, data) {
-    if (data === "") {
-    } else {
-      let savedNotes = JSON.parse(data);
-      notes = savedNotes;
-    }
+fs.readFile("db.json", "utf8", function (err, data) {
+  if (data === "") {
+  } else {
+    let savedNotes = JSON.parse(data);
+    notes = savedNotes;
   }
- 
-);
-
-
+});
 
 // Routes
 // =============================================================
@@ -55,20 +47,38 @@ app.get("/api/notes", function (req, res) {
   return res.json(notes);
 });
 
-//Posts
-//Post from the index.js to the resting api
-//and attach new note to Notes array
-// then write the Notes array to the file
-app.post("/api/notes", function (req, res) {
-  let newNote = req.body;
-  notes.push(newNote);
+//Delete Request
+app.delete("/api/notes/:id", function (req, res) {
+  let chosen = parseInt(req.params.id);
 
-  console.log(notes);
+  const updated = notes.filter((el) => el.id !== chosen);
 
-  fs.writeFileSync("db.json", JSON.stringify(notes), function (err) {
+  // console.log("Original:");
+  // console.log(notes);
+  // console.log("Deleted:");
+
+  packageAndStore(updated);
+  notes = updated;
+});
+
+//create a function that takes an array numbers it and sends it to the db.json
+function packageAndStore(array) {
+  for (let i = 0; i < array.length; i++) {
+    array[i].id = i + 1;
+  }
+
+  fs.writeFileSync("db.json", JSON.stringify(array), function (err) {
     if (err) throw err;
     console.log("Saved!");
   });
+}
+
+//Post
+//Post from the index.js to the resting api
+app.post("/api/notes", function (req, res) {
+  let newNote = req.body;
+  notes.push(newNote);
+  packageAndStore(notes);
 });
 
 app.listen(PORT, function () {
